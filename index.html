@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>613关系图谱</title>
+    <!-- 引入 echarts.js -->
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script>
+        function tuhao() {
+            alert('tuhao')
+        }
+    </script>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        #main {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #button {
+            width: 100px;
+            height: 100px;
+            /*background-color: red;*/
+            position: absolute;
+            left: 50px;
+            top: 60px;
+            z-index: 80
+        }
+
+        button {
+            font-family: "'微软雅黑','Helvetica Neue',Helvetica,Arial,sans-serif";
+            font-size: 13px !important;
+            height: 30px;
+            line-height: 18px !important;
+            padding: 3px 18px;
+            display: inline-block;
+            vertical-align: middle;
+            font-weight: normal;
+            border-radius: 3px;
+            margin: 10px 8px 10px 3px;
+            border: 1px solid #3383da;
+            color: #ffffff;
+            background-color: #3383da;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main"></div>
+<!--<div id="button">-->
+<!--    <button onclick="tuhao()">土豪</button>-->
+<!--</div>-->
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    const colors = ['#a7324a', '#2ccd8b', '#608adb', '#bed742']
+    const linkColors = ['#6f599c', '#b36d41', '#62d949', '#fd56b9', '#f36c21', '#f26522']
+
+    let data = {
+        nodes: [{
+            name: '613',
+            category: 1
+        }, {
+            name: '孙明',
+            category: 2,
+            desc: '他很长'
+        }, {
+            name: '王致远',
+            category: 2
+        }, {
+            name: '王佳洛',
+            category: 2
+        }, {
+            name: '罗令春',
+            category: 2
+        }, {
+            name: '丁宁',
+            category: 4
+        }, {
+            name: '钟超岭',
+            category: 2,
+            desc: '脚最臭'
+        }, {
+            name: '茹轶',
+            category: 3
+        }],
+
+        links: [{
+            source: '613',
+            target: '孙明',
+            name: '成员'
+        }, {
+            source: '613',
+            target: '王致远',
+            name: '成员'
+        }, {
+            source: '613',
+            target: '王佳洛',
+            name: '成员'
+        }, {
+            source: '613',
+            target: '罗令春',
+            name: '成员'
+        }, {
+            source: '613',
+            target: '丁宁',
+            name: '新成员'
+        }, {
+            source: '613',
+            target: '钟超岭',
+            name: '成员'
+        }, {
+            source: '613',
+            target: '茹轶',
+            name: '外协'
+        }, {
+            source: '茹轶',
+            target: '孙明',
+            name: '衣服被偷'
+        }, {
+            source: '王致远',
+            target: '孙明',
+            name: '头对头'
+        }, {
+            source: '丁宁',
+            target: '钟超岭',
+            name: '头对头'
+        }, {
+            source: '王致远',
+            target: '王佳洛',
+            name: '王中王组合'
+        }, {
+            source: '钟超岭',
+            target: '罗令春',
+            name: '老乡'
+        }]
+    }
+
+    data.nodes.forEach(node => {
+        if (node.category === 1) {
+            node.symbolSize = 100;
+            node.itemStyle = {
+                color: colors[0]
+            };
+            node.label = {
+                align: 'center',
+                fontSize: 18
+            };
+        } else if (node.category === 2) {
+            node.itemStyle = {
+                color: colors[1]
+            };
+        } else if (node.category === 3) {
+            node.itemStyle = {
+                color: colors[2]
+            };
+        } else if (node.category === 4) {
+            node.itemStyle = {
+                color: colors[3]
+            };
+        }
+    });
+
+    data.links.forEach(link => {
+        link.label = {
+            align: 'center',
+            fontSize: 14
+        };
+
+        if (link.name === '成员' || link.name === '新成员') {
+            link.lineStyle = {
+                color: linkColors[0]
+            }
+        } else if (link.name === '外协') {
+            link.lineStyle = {
+                color: linkColors[1]
+            }
+        } else if (link.name === '衣服被偷') {
+            link.lineStyle = {
+                color: linkColors[2]
+            }
+        } else if (link.name === '头对头') {
+            link.lineStyle = {
+                color: linkColors[3]
+            }
+        } else if (link.name === '王中王组合') {
+            link.lineStyle = {
+                color: linkColors[4]
+            }
+        } else if (link.name === '老乡') {
+            link.lineStyle = {
+                color: linkColors[5]
+            }
+        }
+    });
+
+    var option = {
+        title: {
+            text: '613关系图谱'
+        },
+        tooltip: {
+            formatter: function (x) {
+                return x.data.desc;
+            }
+        },
+        // animationDurationUpdate: 1500,
+        // animationEasingUpdate: 'quinticInOut',
+        series: [
+            {
+                type: 'graph',
+                layout: 'force',
+                symbolSize: 50,
+                draggable: true,
+                roam: true,
+                label: {
+                    show: true
+                },
+                // focusNodeAdjacency: true,
+                edgeSymbol: ['circle', 'arrow'],
+                edgeSymbolSize: [4, 10],
+                edgeLabel: {
+                    normal: {
+                        show: true,
+                        textStyle: {
+                            fontSize: 30
+                        },
+                        formatter(x) {
+                            return x.data.name;
+                        }
+                    }
+                },
+                force: {
+                    repulsion: 500,
+                    edgeLength: 200
+                },
+                data: data.nodes,
+                links: data.links,
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+</body>
+</html>
